@@ -432,7 +432,7 @@
                     }
                 ],
                 "responses": {
-                    "201": {
+                    "200": {
                         "description": "Book borrowed successfully",
                         "content": {
                             "application/json": {

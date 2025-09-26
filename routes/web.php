@@ -20,8 +20,8 @@ Route::middleware(['auth:sanctum'])->prefix('api')->group(function () {
     // public (logged-in) endpoints
     Route::get('/books', [BookController::class, 'index']);
     Route::get('/books/{id}', [BookController::class, 'show']);
-    Route::post('/books/borrow/{book}', [BorrowingController::class, 'borrow']);
-    Route::post('/books/return/{book}', [BorrowingController::class, 'return']);
+    Route::post('/books/borrow/{id}', [BorrowingController::class, 'borrow']);
+    Route::post('/books/return/{id}', [BorrowingController::class, 'return']);
 
    Route::middleware(['admin'])->group(function () {
     Route::post('/books', [BookController::class, 'store']);

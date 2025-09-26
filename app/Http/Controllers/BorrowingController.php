@@ -21,7 +21,7 @@ class BorrowingController extends Controller
      *         @OA\Schema(type="integer")
      *     ),
      *     @OA\Response(
-     *         response=201,
+     *         response=200,
      *         description="Book borrowed successfully",
      *         @OA\JsonContent(
      *             type="object",
@@ -36,18 +36,22 @@ class BorrowingController extends Controller
      *     @OA\Response(response=409, description="Book is already borrowed")
      * )
      */
-    public function borrow(Request $request, Book $book)
+    public function borrow(Request $request, $bookId)
     {
-        $user = $request->user();
+        $book = Book::find($bookId);
+
+        if (!$book) {
+            return response()->json(['message' => 'Book not found'], 404);
+        }
 
         if ($book->is_borrowed) {
             return response()->json(['message' => 'Book is already borrowed'], 409);
         }
 
         $borrowing = Borrowing::create([
-            'user_id' => $user->id,
-            'book_id' => $book->id,
-            'borrowed_at' => now(),
+            'user_id'    => $request->user()->id,
+            'book_id'    => $book->id,
+            'borrowed_at'=> now(),
         ]);
 
         $book->is_borrowed = true;
@@ -56,7 +60,9 @@ class BorrowingController extends Controller
         Cache::forget('books');
         event(new \App\Events\BookBorrowed($book, $request->user()));
 
-        return response()->json($borrowing, 201);
+        return response()->json([
+            'message'   => 'Book borrowed successfully',
+        ], 200);
     }
 
     /**
@@ -86,8 +92,13 @@ class BorrowingController extends Controller
      *     @OA\Response(response=404, description="No active borrowing found")
      * )
      */
-    public function return(Request $request, Book $book)
-    {
+    public function return(Request $request, $bookId) {
+        $book = Book::find($bookId);
+
+        if (!$book) {
+            return response()->json(['message' => 'Book not found'], 404);
+        }
+
         $user = $request->user();
 
         $borrowing = Borrowing::where('user_id', $user->id)
@@ -107,6 +118,8 @@ class BorrowingController extends Controller
 
         Cache::forget('books');
 
-        return response()->json($borrowing);
+        return response()->json([
+            'message' => 'Book returned successfully',
+        ], 200);
     }
 }

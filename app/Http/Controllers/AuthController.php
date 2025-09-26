@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Role;
-use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {    /**
@@ -116,6 +116,7 @@ class AuthController extends Controller
         return response()->json([
             'access_token' => $token,
             'token_type' => 'Bearer',
+            'role' => $user->role,
         ]);
     }
 }
