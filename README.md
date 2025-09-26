@@ -32,6 +32,8 @@ Run a specific test file: `php artisan test --filter=TestFileName`
 - Database Design: Normalized tables for `books`, `authors`, `members`, and `transactions` to ensure data integrity.
 - API Structure: Follows RESTful conventions with resource controllers for modularity.
 - Validation & Error Handling: Leveraged Laravel’s built-in validation and exception handling to maintain robust endpoints.
+- Testing: Included feature and unit tests to ensure core functionalities work as expected.
+
 
 ## Swagger
 
